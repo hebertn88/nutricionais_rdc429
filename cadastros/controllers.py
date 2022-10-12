@@ -1,5 +1,7 @@
 from typing import Any, Type
+
 from .models import ComposicaoItem, Item, MedidaCaseira, Nutricional, RendimentoItem
+from .utils import clean_text
 
 
 def criar_item(
@@ -26,6 +28,8 @@ def criar_item(
     quantidade_rendimento : float = 0.0,
     ingredientes : list[dict[str, Any]] = []
     ) -> tuple[bool, str, Type[Item] | None] :
+
+    descricao = clean_text(descricao)
 
     item : Type[Item] = Item.objects.filter(descricao=descricao)
     if (item.exists()):
@@ -189,6 +193,8 @@ def criar_nutricional(
 
 
 def criar_medida_caseira(descricao : str) -> tuple[bool, str, Type[MedidaCaseira] | None] :
+    descricao = clean_text(descricao)
+
     medida_caseira : Type[MedidaCaseira] = MedidaCaseira.objects.filter(descricao=descricao)
     if (medida_caseira.exists()):
         medida_caseira = medida_caseira.first()
@@ -215,11 +221,11 @@ def criar_rendimento(
         
 def criar_ingrediente(
     produto_final : Type[Item],
-    ingrediente : int,
+    ingrediente : str,
     quantidade_ingrediente : float,
     acucar_adicional : bool) -> tuple[bool, str, Type[ComposicaoItem] | None] :
     
-    ingrediente = Item.objects.get(id=ingrediente)
+    ingrediente = Item.objects.get(descricao=ingrediente)
 
 
     item_composicao : Type[ComposicaoItem] = ComposicaoItem.objects.filter(produto_final=produto_final, ingrediente=ingrediente)

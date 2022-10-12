@@ -10,8 +10,7 @@ class Teste(TestCase):
         assert result[0] == True
 
     def teste_criar_item(self):
-        criar_medida_caseira('MedCaseiraTeste')
-        medida_caseira = MedidaCaseira.objects.get(descricao='MedCaseiraTeste')
+        *_, medida_caseira = criar_medida_caseira('MedCaseiraTeste')
 
         result = criar_item(
             "item teste",
@@ -20,9 +19,7 @@ class Teste(TestCase):
         assert result[0] == True
 
     def teste_falha_ao_criar_item_duplicado(self):
-        criar_medida_caseira('MedCaseiraTeste')
-        medida_caseira = MedidaCaseira.objects.get(descricao='MedCaseiraTeste')
-
+        *_, medida_caseira = criar_medida_caseira('MedCaseiraTeste')
         criar_item(
             "item teste",
             medida_caseira.id
@@ -51,11 +48,11 @@ class Teste(TestCase):
         assert result[0] == True
     
     def teste_criar_item_composto(self):
-        medida_caseira = criar_medida_caseira('Minha Medida Caseira')
+        *_, medida_caseira = criar_medida_caseira('Minha Medida Caseira')
 
         ing_01 = criar_item(
             descricao='Mistura Pao Frances',
-            medida_caseira=medida_caseira[2].id,
+            medida_caseira=medida_caseira.id,
             ingrediente=True,
             composto=False,
             quantidade_porcao=0.05,
@@ -75,7 +72,7 @@ class Teste(TestCase):
 
         ing_02 = criar_item(
             descricao='Fermento',
-            medida_caseira=medida_caseira[2].id,
+            medida_caseira=medida_caseira.id,
             ingrediente=True,
             composto=False,
             quantidade_porcao=0.1,
@@ -95,7 +92,7 @@ class Teste(TestCase):
 
         ing_03 = criar_item(
             descricao='Melhorador',
-            medida_caseira=medida_caseira[2].id,
+            medida_caseira=medida_caseira.id,
             ingrediente=True,
             composto=False,
             quantidade_porcao=0.1,
@@ -115,19 +112,19 @@ class Teste(TestCase):
 
         pf = criar_item(
             descricao='Pao Frances',
-            medida_caseira=medida_caseira[2].id,
+            medida_caseira=medida_caseira.id,
             ingrediente=True,
             composto=True,
             quantidade_porcao=0.05,
             quantidade_rendimento=30.75,
             ingredientes= [
-                {'ingrediente' : ing_01[2].id,
+                {'ingrediente' : ing_01[2].descricao,
                 'quantidade_ingrediente': 25,
                 'acucar_adicional' : False},
-                {'ingrediente' : ing_02[2].id,
+                {'ingrediente' : ing_02[2].descricao,
                 'quantidade_ingrediente': 0.75,
                 'acucar_adicional' : False},
-                {'ingrediente' : ing_03[2].id,
+                {'ingrediente' : ing_03[2].descricao,
                 'quantidade_ingrediente': 0.2,
                 'acucar_adicional' : False},
                 ]

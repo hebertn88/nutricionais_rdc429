@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+Cadastro Simples
+{% endblock %}
+
+{% block body %}
+    {{ msg }}
+    <form action="{% url 'cadastro' %}" method="post" class="d-flex flex-column mt-3 p-3 bg-white rounded shadow">{% csrf_token %}
+
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="produto">Produto</label>
+                <input type="text" class="form-control" name="produto" id="produto" autofocus required>
+            </div>
+        </div>
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex align-items-center gap-3 border rounded p-2" style="flex-grow: 3;">
+                <p class="form-label">Fórmula: </p>
+                <div class="form-check flex-fill">
+                    <input class="form-check-input" type="radio" name="radioComposicao" id="radioSimples" value="False" checked>
+                    <label class="form-check-label" for="radioSimples">
+                        Simples
+                    </label>
+                </div>
+                <div class="form-check flex-fill">
+                    <input class="form-check-input" type="radio" name="radioComposicao" id="radioComposto" value="True">
+                    <label class="form-check-label" for="radioComposto">
+                        Composto
+                    </label>
+                    </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 p-2" style="flex-grow: 1;">
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" name="ingrediente" id="ingrediente">
+                <label class="form-check-label" for="ingrediente">
+                    Ingrediente
+                </label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadePorcao">
+                    Porção (g/mL)
+                </label>
+                <input type="number" class="form-control" name="quantidadePorcao" id="quantidadePorcao" min="0" value="0" step="1" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadeEmbalagem">
+                    Porções por Embalagem
+                </label>
+                <input type="number" class="form-control" name="quantidadeEmbalagem" id="quantidadeEmbalagem" min="0" value="0" step="1" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadeCaseira">
+                    Quantidade Caseira
+                </label>
+                <input type="number" class="form-control" name="quantidadeCaseira" id="quantidadeCaseira" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="medidaCaseira">
+                    Medida Caseira
+                </label>
+                <select class="form-select" name="medidaCaseira" id="medidaCaseira" required>
+                    <option selected disabled>Selecione</option>
+                    {% for mc in medidas_caseiras %}
+                        <option value="{{ mc.id }}">{{ mc.descricao }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+        
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="valorEnergetico">
+                    Valor Energetico
+                </label>
+                <input type="number" class="form-control" name="valorEnergetico" id="valorEnergetico" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="carboidrato">
+                    Carboidrato
+                </label>
+                <input type="number" class="form-control" name="carboidrato" id="carboidrato" min="0" value="0" step="0.01">
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="acucarTotal">
+                    Açúcar Total
+                </label>
+                <input type="number" class="form-control" name="acucarTotal" id="acucarTotal" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="acucarAdicionado">
+                    Açúcar Adicionado
+                </label>
+                <input type="number" class="form-control" name="acucarAdicionado" id="acucarAdicionado" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="proteina">
+                    Proteina
+                </label>
+                <input type="number" class="form-control" name="proteina" id="proteina" min="0" value="0" step="0.01" required>
+            </div>
+        </div>
+        
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="gorduraTotal">
+                    Gordura Total
+                </label>
+                <input type="number" class="form-control" name="gorduraTotal" id="gorduraTotal" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="gorduraSaturada">
+                    Gordura Saturada
+                </label>
+                <input type="number" class="form-control" name="gorduraSaturada" id="gorduraSaturada" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="gorduraTrans">
+                    Gordura Trans
+                </label>
+                <input type="number" class="form-control" name="gorduraTrans" id="gorduraTrans" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="fibraAlimentar">
+                    Fibra Alimentar
+                </label>
+                <input type="number" class="form-control" name="fibraAlimentar" id="fibraAlimentar" min="0" value="0" step="0.01" required>
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="sodio">
+                    Sódio
+                </label>
+                <input type="number" class="form-control" name="sodio" id="sodio" min="0" value="0" step="0.01" required>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <input type="submit" class="btn btn-primary ms-auto px-4" value="Enviar">
+        </div>
+        
+    </form>
+
+{% endblock %}
