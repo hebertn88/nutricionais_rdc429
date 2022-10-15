@@ -8,7 +8,7 @@ Cadastro Simples
 {% block body %}
     {{ msg }}
     {{ BASE_DIR }}
-    <form action="{% url 'cadastro' %}" method="post" id="formItem" name="formItem" class="d-flex flex-column mt-3 p-3 bg-white rounded shadow">{% csrf_token %}
+    <form action="{% url 'cadastro_item' %}" method="post" id="formItem" name="formItem" class="d-flex flex-column mt-3 p-3 bg-white rounded shadow">{% csrf_token %}
 
         <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
             <div class="d-flex flex-column flex-fill">
@@ -47,9 +47,9 @@ Cadastro Simples
         <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
             <div class="d-flex flex-column flex-fill">
                 <label class="form-label" for="quantidadePorcao">
-                    Porção (g/mL)
+                    Porção (kg/L)
                 </label>
-                <input type="number" class="form-control" name="quantidadePorcao" id="quantidadePorcao" min="0" value="0" step="1" required>
+                <input type="number" class="form-control" name="quantidadePorcao" id="quantidadePorcao" min="0.01" value="0" step="0.01" required>
             </div>
             <div class="d-flex flex-column flex-fill">
                 <label class="form-label" for="quantidadeEmbalagem">
@@ -82,31 +82,31 @@ Cadastro Simples
             <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="valorEnergetico">
-                        Valor Energetico
+                        Valor Energetico (kcal)
                     </label>
                     <input type="number" class="form-control" name="valorEnergetico" id="valorEnergetico" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="carboidrato">
-                        Carboidrato
+                        Carboidrato (g)
                     </label>
                     <input type="number" class="form-control" name="carboidrato" id="carboidrato" min="0" value="0" step="0.01">
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="acucarTotal">
-                        Açúcar Total
+                        Açúcar Total (g)
                     </label>
                     <input type="number" class="form-control" name="acucarTotal" id="acucarTotal" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="acucarAdicionado">
-                        Açúcar Adicionado
+                        Açúcar Adicionado (g)
                     </label>
                     <input type="number" class="form-control" name="acucarAdicionado" id="acucarAdicionado" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="proteina">
-                        Proteina
+                        Proteina (g)
                     </label>
                     <input type="number" class="form-control" name="proteina" id="proteina" min="0" value="0" step="0.01" required>
                 </div>
@@ -115,31 +115,31 @@ Cadastro Simples
             <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="gorduraTotal">
-                        Gordura Total
+                        Gordura Total (g)
                     </label>
                     <input type="number" class="form-control" name="gorduraTotal" id="gorduraTotal" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="gorduraSaturada">
-                        Gordura Saturada
+                        Gordura Saturada (g)
                     </label>
                     <input type="number" class="form-control" name="gorduraSaturada" id="gorduraSaturada" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="gorduraTrans">
-                        Gordura Trans
+                        Gordura Trans (g)
                     </label>
                     <input type="number" class="form-control" name="gorduraTrans" id="gorduraTrans" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="fibraAlimentar">
-                        Fibra Alimentar
+                        Fibra Alimentar (g)
                     </label>
                     <input type="number" class="form-control" name="fibraAlimentar" id="fibraAlimentar" min="0" value="0" step="0.01" required>
                 </div>
                 <div class="d-flex flex-column flex-fill">
                     <label class="form-label" for="sodio">
-                        Sódio
+                        Sódio (mg)
                     </label>
                     <input type="number" class="form-control" name="sodio" id="sodio" min="0" value="0" step="0.01" required>
                 </div>
@@ -151,7 +151,7 @@ Cadastro Simples
             <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
                 <div class="d-flex">
                     <label class="form-label" for="rendimento">
-                        Rendimento Final
+                        Rendimento Final (kg/L)
                     </label>
                 </div>
                 <div class="d-flex">
@@ -176,7 +176,7 @@ Cadastro Simples
                 </div>
                 <div class="d-flex flex-column">
                     <label class="form-label" for="quantidadeIngrediente">
-                        Quantidade Utilizada
+                        Quantidade Utilizada (kg/L)
                     </label>
                     <input type="number" class="form-control" name="quantidadeIngrediente" id="quantidadeIngrediente" min="0" value="0" step="0.01">
                 </div>
@@ -240,7 +240,10 @@ Cadastro Simples
         <hr class="mb-4" id="sepFinalSection">
 
         <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
-            <input type="submit" class="btn btn-primary ms-auto px-4" value="Enviar" id="enviar">
+            <button type="submit" class="btn btn-primary ms-auto" id="enviar" name="enviar">
+                <i class="bi bi-save-fill"></i>
+                Enviar
+            </button>
         </div>
         
     </form>

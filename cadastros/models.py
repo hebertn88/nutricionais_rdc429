@@ -43,6 +43,9 @@ class Nutricional(models.Model):
     gordura_trans = models.FloatField('Gorduras Trans', default=0.0)
     fibra_alimentar = models.FloatField('Fibra Alimentar', default=0.0)
     sodio = models.FloatField('Sódio', default=0.0)
+    alto_acucar = models.BooleanField('Alto Açúcar Adicionado', default=False)
+    alto_gordura = models.BooleanField('Alto Gordura Saturada', default=False)
+    alto_sodio = models.BooleanField('Alto Sódio', default=False)
 
     def __str__(self):
         return self.descricao

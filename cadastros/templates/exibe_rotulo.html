@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}
+Rótulo
+{% endblock %}
+
+{% block body %}
+    teste: {{ item.descricao }}
+    <table class="table table-striped table-hover rounded shadow">
+        <thead>
+            <tr>
+                <th scope="col" class="p-3"></th>
+                <th scope="col" class="p-3">100g</th>
+                <th scope="col" class="p-3">{{ rotulo.quantidade_porcao | multMil:1000 }}g</th>
+                <th scope="col" class="p-3">%VD*</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Valor Energético
+                </td>
+                <td>
+                    {{ rotulo.valor_energetico | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.valor_energetico | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Carboidrato
+                </td>
+                <td>
+                    {{ rotulo.carboidrato | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.carboidrato | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Açúcar Total
+                </td>
+                <td>
+                    {{ rotulo.acucar_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.acucar_total | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Açúcar Adicionado
+                </td>
+                <td>
+                    {{ rotulo.acucar_adicionado | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.acucar_adicionado | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Proteina
+                </td>
+                <td>
+                    {{ rotulo.proteina | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.proteina | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Gordura Total
+                </td>
+                <td>
+                    {{ rotulo.gordura_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.gordura_total | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Gordura Saturada
+                </td>
+                <td>
+                    {{ rotulo.gordura_saturada | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.gordura_saturada | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Gordura Trans
+                </td>
+                <td>
+                    {{ rotulo.gordura_trans | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.gordura_trans | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Fibra Alimentar
+                </td>
+                <td>
+                    {{ rotulo.fibra_alimentar | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                </td>
+                <td>
+                    {{ rotulo.fibra_alimentar | arredRotulo }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Sódio
+                </td>
+                <td>
+                    {{ rotulo.sodio | qtdPerCent:rotulo.quantidade_porcao | arredRotulo:'mg' }}
+                </td>
+                <td>
+                    {{ rotulo.sodio | arredRotulo:'mg' }}
+                </td>
+                <td>
+                    __valor_diario__
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+            <table class="table table-striped table-hover rounded shadow">
+                <thead>
+                  <tr>
+                    <th scope="col" class="p-3">Ingrediente</th>
+                    <th scope="col" class="p-3">Quantidade Utilizada</th>
+                    <th scope="col" class="p-3">Remover</th>
+                  </tr>
+                </thead>
+                <tbody id="tBody">
+                    <tr id="rowVazio">
+                        <td class="text-center" colspan="3">Não há ingredientes para exibir!</td>
+                    </tr>
+                    <!--<tr>
+                        <td class="p-3">MISTURA PAO FRANCES</td>
+                        <td class="p-3">0,5</td>
+                        <td class="p-3">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-3">
+                            MELHORADOR
+                            <span class="badge rounded-pill text-bg-primary">Açúcar</span>
+                        </td>
+                        <td class="p-3">0,8</td>
+                        <td class="p-3">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>-->
+                </tbody>
+            </table>
+        </section>
+
+        <hr class="mb-4" id="sepFinalSection">
+
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <button type="submit" class="btn btn-primary ms-auto" id="enviar" name="enviar">
+                <i class="bi bi-save-fill"></i>
+                Enviar
+            </button>
+        </div>
+        
+    </form>
+    
+{% endblock %}

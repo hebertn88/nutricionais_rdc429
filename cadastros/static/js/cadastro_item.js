@@ -85,7 +85,7 @@ elAdicionarItem.addEventListener('click', ()=>{
         
         const elTdQuantidade = document.createElement('td');
         elTdQuantidade.classList.add('p-3');
-        elTdQuantidade.innerText = elQtdUtilizada.value;
+        elTdQuantidade.innerText = parseFloat(elQtdUtilizada.value).toLocaleString();
         
         const elTdRemover = document.createElement('td');
         elTdRemover.classList.add('p-3');
@@ -116,7 +116,8 @@ elAdicionarItem.addEventListener('click', ()=>{
 // Funcao remover item table
 function removeRowTable() {
     const elTr = this.parentNode.parentNode;
-    const descIngrediente = elTr.firstChild.innerText;
+    let descIngrediente = elTr.firstChild.innerText;
+    descIngrediente = descIngrediente.replace(' Açúcar', '')
     listaIngredientes = listaIngredientes.filter(i => i.descricao != descIngrediente);
     elTr.remove();
     if (listaIngredientes.length === 0) {
@@ -141,13 +142,32 @@ elEnviar.addEventListener('click', (e)=>{
                 produto: document.getElementById('produto').value,
                 composto: radiosFormula[1].checked,
                 ingrediente: document.getElementById('ingrediente').checked,
-                rendimento: document.getElementById('rendimento').value,
+                quantidade_porcao: parseFloat(document.getElementById('quantidadePorcao').value),
+                quantidade_embalagem: parseInt(document.getElementById('quantidadeEmbalagem').value),
+                quantidade_medida_caseira: parseFloat(document.getElementById('quantidadeCaseira').value),
+                medida_caseira: parseInt(document.getElementById('medidaCaseira').value),
+                quantidade_rendimento: document.getElementById('rendimento').value,
                 ingredientes: listaIngredientes,
             }),
         })
-        .then(()=>{
-            window.location.assign(window.location.href);
-            window.alert('Item cadastrador com sucesso!');
-        })
+        .then((response) => response.json())
+        .then((data) => {
+            //console.log(data);
+            const cod = data['cod'];
+            const msg = data['msg'];
+
+            if (cod) {
+                window.location.assign(window.location.href);
+            }
+            window.alert(msg);
+        }
+        
+        ).catch(
+            error => {
+                console.error;
+            }
+        )
+
+            
     }
 })
