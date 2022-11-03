@@ -72,3 +72,22 @@ def splitVal(value : float | int ) -> str :
     return si, sd
 
 register.filter('arredRotulo', arredRotulo)
+
+def vdr(value, arg):
+    match arg:
+        case 'valor_energetico' | 'sodio':
+            return round((value / 2000) * 100)
+        case 'carboidrato':
+            return int((value / 300) * 100)
+        case 'acucar_adicionado' | 'proteina':
+            return int((value / 50) * 100)
+        case 'gordura_total':
+            return int((value / 65) * 100)
+        case 'gordura_saturada':
+            return int((value / 20) * 100)
+        case 'gordura_trans':
+            return int((value / 2) * 100)
+        case 'fibra_alimentar':
+            return int((value / 25) * 100)
+
+register.filter('vdr', vdr)

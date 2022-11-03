@@ -152,14 +152,15 @@ elEnviar.addEventListener('click', (e)=>{
         })
         .then((response) => response.json())
         .then((data) => {
-            //console.log(data);
+            /*
             const cod = data['cod'];
             const msg = data['msg'];
-
+            console.log(data.status)
             if (cod) {
                 window.location.assign(window.location.href);
             }
-            window.alert(msg);
+            window.alert(msg);*/
+            window.location.replace(window.location.href);
         }
         
         ).catch(

@@ -1,0 +1,28 @@
+{% load static %}
+
+<nav class="navbar sticky-top navbar-dark bg-dark">
+    <div class="container px-4">
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <img src="{% static 'img/logo_200.png' %}" alt="Bootstrap" width="36"></a>
+        <a class="nav-link text-white ms-0 me-auto" href="{% url 'home' %}">Início</a>
+        <div class="btn-group">
+          <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+            Hebert
+          </button>
+          <ul class="dropdown-menu dropdown-menu-lg-end">
+            <li>
+              <button class="dropdown-item" type="button">
+                <i class="bi bi-key-fill"></i> Alterar Senha
+              </button>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item" type="button">
+                <i class="bi bi-door-open-fill"></i> Sair
+              </button></li>
+          </ul>
+        </div>
+    </div>
+</nav>

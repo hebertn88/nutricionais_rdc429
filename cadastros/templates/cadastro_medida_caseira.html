@@ -5,8 +5,7 @@ Cadastro Medida Caseira
 {% endblock %}
 
 {% block body %}
-    {{msg}}
-    <form action="{% url 'cadastro_medida_caseira' %}" method="post" class="d-flex flex-column mt-3 p-3 bg-white rounded shadow">{% csrf_token %}
+    <form action="{% url 'cadastro_medida_caseira' %}" method="post" class="d-flex flex-column">{% csrf_token %}
 
         <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
             <div class="d-flex flex-column flex-fill">

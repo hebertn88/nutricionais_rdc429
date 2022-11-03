@@ -48,4 +48,4 @@ class Nutricional(models.Model):
     alto_sodio = models.BooleanField('Alto Sódio', default=False)
 
     def __str__(self):
-        return self.descricao
+        return self.item.descricao

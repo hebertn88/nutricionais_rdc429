@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Nutricionais - Editar Item
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'edita_item' item.id %}" method="post" id="formItem" name="formItem" class="d-flex flex-column">{% csrf_token %}
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="produto">Produto</label>
+                <input type="text" class="form-control" name="produto" id="produto" value="{{ item.descricao }}" disabled requred>
+            </div>
+        </div>
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex align-items-center gap-3 border rounded p-2" style="flex-grow: 3;">
+                <p class="form-label">Fórmula: </p>
+                
+                <div class="form-check flex-fill">
+                    <input class="form-check-input" type="radio" name="radioFormula" id="radioSimples" value="False" disabled
+                    {% if not item.composto %}checked{% endif %}>
+                    <label class="form-check-label" for="radioSimples">
+                        Simples
+                    </label>
+                </div>
+                <div class="form-check flex-fill">
+                    <input class="form-check-input" type="radio" name="radioFormula" id="radioComposto" value="True" disabled
+                    {% if item.composto %}checked{% endif %}>
+                    <label class="form-check-label" for="radioComposto">
+                        Composto
+                    </label>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 p-2" style="flex-grow: 1;">
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" name="ingrediente" id="ingrediente" {% if item.ingrediente %}checked{% endif %}>
+                <label class="form-check-label" for="ingrediente">
+                    Ingrediente
+                </label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadePorcao">
+                    Porção (kg/L)
+                </label>
+                <input type="number" class="form-control" name="quantidadePorcao" id="quantidadePorcao" min="0.01" step="0.01" required value="{{ item.nutricional.quantidade_porcao | escape | default:"0" }}">
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadeEmbalagem">
+                    Porções por Embalagem
+                </label>
+                <input type="number" class="form-control" name="quantidadeEmbalagem" id="quantidadeEmbalagem" min="0" step="1" required
+                value="{{ item.nutricional.quantidade_embalagem | escape | default:"0" }}">
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="quantidadeCaseira">
+                    Quantidade Caseira
+                </label>
+                <input type="number" class="form-control" name="quantidadeCaseira" id="quantidadeCaseira" min="0" step="0.01" required
+                value="{{ item.nutricional.quantidade_medida_caseira | escape | default:"0" }}">
+            </div>
+            <div class="d-flex flex-column flex-fill">
+                <label class="form-label" for="medidaCaseira">
+                    Medida Caseira
+                </label>
+                <select class="form-select" name="medidaCaseira" id="medidaCaseira" required>
+                    <option disabled>Selecione</option>
+                    {% for mc in medidas_caseiras %}
+                        <option value="{{ mc.id }}"
+                        {% if item.nutricional.medida_caseira.id == mc.id %}
+                            selected
+                        {% endif %}>
+                            {{ mc.descricao }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+        {% if not item.composto %}
+        <section id="sectionSimples" name="sectionSimples">            
+            <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="valorEnergetico">
+                        Valor Energetico (kcal)
+                    </label>
+                    <input type="number" class="form-control" name="valorEnergetico" id="valorEnergetico" min="0" step="0.01" required
+                    value="{{ item.nutricional.valor_energetico | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="carboidrato">
+                        Carboidrato (g)
+                    </label>
+                    <input type="number" class="form-control" name="carboidrato" id="carboidrato" min="0" step="0.01"value="{{ item.nutricional.carboidrato | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="acucarTotal">
+                        Açúcar Total (g)
+                    </label>
+                    <input type="number" class="form-control" name="acucarTotal" id="acucarTotal" min="0" step="0.01" required
+                    value="{{ item.nutricional.acucar_total | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="acucarAdicionado">
+                        Açúcar Adicionado (g)
+                    </label>
+                    <input type="number" class="form-control" name="acucarAdicionado" id="acucarAdicionado" min="0" step="0.01" required
+                    value="{{ item.nutricional.acucar_adicionado | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="proteina">
+                        Proteina (g)
+                    </label>
+                    <input type="number" class="form-control" name="proteina" id="proteina" min="0" step="0.01" required
+                    value="{{ item.nutricional.proteina | escape | default:"0" }}">
+                </div>
+            </div>
+            
+            <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="gorduraTotal">
+                        Gordura Total (g)
+                    </label>
+                    <input type="number" class="form-control" name="gorduraTotal" id="gorduraTotal" min="0" step="0.01" required
+                    value="{{ item.nutricional.gordura_total | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="gorduraSaturada">
+                        Gordura Saturada (g)
+                    </label>
+                    <input type="number" class="form-control" name="gorduraSaturada" id="gorduraSaturada" min="0" step="0.01" required
+                    value="{{ item.nutricional.gordura_saturada | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="gorduraTrans">
+                        Gordura Trans (g)
+                    </label>
+                    <input type="number" class="form-control" name="gorduraTrans" id="gorduraTrans" min="0" step="0.01" required
+                    value="{{ item.nutricional.gordura_trans | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="fibraAlimentar">
+                        Fibra Alimentar (g)
+                    </label>
+                    <input type="number" class="form-control" name="fibraAlimentar" id="fibraAlimentar" min="0" step="0.01" required
+                    value="{{ item.nutricional.fibra_alimentar | escape | default:"0" }}">
+                </div>
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="sodio">
+                        Sódio (mg)
+                    </label>
+                    <input type="number" class="form-control" name="sodio" id="sodio" min="0" step="0.01" required
+                    value="{{ item.nutricional.sodio | escape | default:"0" }}">
+                </div>
+            </div>
+        </section>
+        {% else %}
+        <section id="sectionComposto" name="sectionComposto">
+
+            <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
+                <div class="d-flex">
+                    <label class="form-label" for="rendimento">
+                        Rendimento Final (kg/L)
+                    </label>
+                </div>
+                <div class="d-flex">
+                    <input type="number" class="form-control" name="rendimento" id="rendimento" min="0.01" step="0.01" required
+                    value="{{ item.rendimentoitem.quantidade_rendimento | escape | default:"0" }}">
+                </div>
+            </div>
+    
+            <hr class="mb-3">
+    
+            <div class="d-flex flex-row  flex-wrap align-items-end mb-3 gap-3">
+                <div class="d-flex flex-column flex-fill">
+                    <label class="form-label" for="selIngrediente">
+                        Selecione um Ingrediente
+                    </label>
+                    <input list="ingredientes" class="form-control" name="selIngrediente" id="selIngrediente">
+                    
+                    <datalist id="ingredientes">
+                        {% for i in ingredientes %}
+                        <option class="optIngredientes" value="{{i.descricao}}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="d-flex flex-column">
+                    <label class="form-label" for="quantidadeIngrediente">
+                        Quantidade Utilizada (kg/L)
+                    </label>
+                    <input type="number" class="form-control" name="quantidadeIngrediente" id="quantidadeIngrediente" min="0" step="0.01">
+                </div>
+                <div class="d-flex align-items-center gap-2 p-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="True" name="acucarAdicional" id="acucarAdicional">
+                        <label class="form-check-label" for="acucarAdicional">
+                            Açúcar Adicional
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <button type="button" class="btn btn-primary" id="adicionarItem" name="adicionarItem" disabled>
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Adicionar
+                    </button>
+                </div>    
+            </div>
+    
+            <hr class="mb-4">
+    
+            <p class="fs-4 mb-3">Ingredientes Adicionados</p>
+    
+            <table class="table table-striped table-hover rounded shadow">
+                <thead>
+                  <tr>
+                    <th scope="col" class="p-3">Ingrediente</th>
+                    <th scope="col" class="p-3">Quantidade Utilizada</th>
+                    <th scope="col" class="p-3">Remover</th>
+                  </tr>
+                </thead>
+                <tbody id="tBody">
+                    {% for i in item_ingredientes %}
+                        <tr>
+                            <td class="p-3">
+                                {{ i.ingrediente.descricao }}
+                                {% if i.acucar_adicional %}
+                                    <span class="badge rounded-pill text-bg-primary">Açúcar</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-3">
+                                {{ i.quantidade_ingrediente | escape | default:"0" }}
+                            </td>
+                            <td class="p-3">
+                                <button class="btn btn-danger btn-sm" type="button">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr id="rowVazio">
+                        <td class="text-center" colspan="3">Não há ingredientes para exibir!</td>
+                    </tr>
+                    <!--<tr>
+                        <td class="p-3">MISTURA PAO FRANCES</td>
+                        <td class="p-3">0,5</td>
+                        <td class="p-3">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-3">
+                            MELHORADOR
+                            <span class="badge rounded-pill text-bg-primary">Açúcar</span>
+                        </td>
+                        <td class="p-3">0,8</td>
+                        <td class="p-3">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>-->
+                </tbody>
+            </table>
+        </section>
+        {% endif %}
+        <hr class="mb-4" id="sepFinalSection">
+
+        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
+            <button type="submit" class="btn btn-primary ms-auto" id="enviar" name="enviar">
+                <i class="bi bi-save-fill"></i>
+                Enviar
+            </button>
+        </div>
+        
+    </form>
+
+    <script src="{% static 'js/edita_item.js' %}"></script>
+{% endblock %}

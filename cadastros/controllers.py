@@ -9,11 +9,10 @@ from .utils import clean_text
 def criar_item(
     descricao : str,
     medida_caseira : int, #nutricional
+    quantidade_porcao : float,
 
     ingrediente : bool = False,
     composto: bool = False,
-    
-    quantidade_porcao : float = 0.0,
     quantidade_embalagem : int = 1,
     quantidade_medida_caseira : float = 0.0,
     valor_energetico : float = 0.0,
@@ -31,7 +30,7 @@ def criar_item(
     ingredientes : list[dict[str, Any]] = []
     ) -> tuple[bool, str, Type[Item] | None] :
 
-    descricao = clean_text(descricao)
+    descricao : str = clean_text(descricao)
 
     item : Type[Item] = Item.objects.filter(descricao=descricao)
     if (item.exists()):
@@ -63,57 +62,15 @@ def criar_item(
 
                     if not ing_result[0]:
                         return (False, ing_result[1], None)
-
-                ingredientes : Type[ComposicaoItem] = ComposicaoItem.objects.filter(produto_final=item).all()
-
-                rotulo_nutricional : dict[str, float] = {
-                    'valor_energetico' : 0.0,
-                    'carboidrato' : 0.0,
-                    'acucar_total' : 0.0,
-                    'acucar_adicionado' : 0.0,
-                    'proteina' : 0.0,
-                    'gordura_total' : 0.0,
-                    'gordura_saturada' : 0.0,
-                    'gordura_trans' : 0.0,
-                    'fibra_alimentar' : 0.0,
-                    'sodio' : 0.0
-                }
-
-                for i in ingredientes:
-                    _ingrediente : Type[Nutricional] = Nutricional.objects.get(item=i.ingrediente)
-                    rotulo_nutricional['carboidrato'] += (_ingrediente.carboidrato / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['acucar_total'] += (_ingrediente.acucar_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['proteina'] += (_ingrediente.proteina / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['gordura_total'] += (_ingrediente.gordura_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['gordura_saturada'] += (_ingrediente.gordura_saturada / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['fibra_alimentar'] += (_ingrediente.fibra_alimentar / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    rotulo_nutricional['sodio'] += (_ingrediente.sodio / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-
-                    if i.acucar_adicional:
-                        rotulo_nutricional['acucar_adicionado'] += (_ingrediente.acucar_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-                    else:
-                        rotulo_nutricional['acucar_adicionado'] += (_ingrediente.acucar_adicionado / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
-
-
-                rotulo_nutricional['valor_energetico'] = (4 * (rotulo_nutricional['carboidrato'] + rotulo_nutricional['proteina'])) + (9 * rotulo_nutricional['gordura_total']) + (2 * rotulo_nutricional['fibra_alimentar'])
                 
                 nutricional : tuple[bool, str, Type[Nutricional]] = criar_nutricional(
                     item = item,
                     quantidade_porcao = quantidade_porcao,
                     quantidade_embalagem = quantidade_embalagem,
                     quantidade_medida_caseira = quantidade_medida_caseira,
-                    medida_caseira = medida_caseira,
-                    valor_energetico = (rotulo_nutricional['valor_energetico'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    carboidrato = (rotulo_nutricional['carboidrato'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    acucar_total = (rotulo_nutricional['acucar_total'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    acucar_adicionado = (rotulo_nutricional['acucar_adicionado'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    proteina = (rotulo_nutricional['proteina'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    gordura_total = (rotulo_nutricional['gordura_total'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    gordura_saturada = (rotulo_nutricional['gordura_saturada'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    gordura_trans = (rotulo_nutricional['gordura_trans'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    fibra_alimentar = (rotulo_nutricional['fibra_alimentar'] / rendimento.quantidade_rendimento) * quantidade_porcao,
-                    sodio = (rotulo_nutricional['sodio'] / rendimento.quantidade_rendimento) * quantidade_porcao
+                    medida_caseira = medida_caseira
                 )
+
                 if nutricional[0]:
                     return (True, 'Item criado com sucesso!', item)
                 else:
@@ -125,7 +82,6 @@ def criar_item(
             try:
                 item : Type[Item] = Item(descricao=descricao, ingrediente=ingrediente)
                 item.save()
-                
                 nutricional : tuple[bool, str, Type[Nutricional]] = criar_nutricional(
                     item = item,
                     quantidade_porcao = quantidade_porcao,
@@ -152,60 +108,99 @@ def criar_item(
 
 def criar_nutricional(
     item : Type[Item],
-    medida_caseira = int,
-    quantidade_porcao : int = 0,
-    quantidade_embalagem : int = 1,
-    quantidade_medida_caseira : float = 0,
-    valor_energetico : float = 0,
-    carboidrato : float = 0,
-    acucar_total : float = 0,
-    acucar_adicionado : float = 0,
-    proteina : float = 0,
-    gordura_total : float = 0,
-    gordura_saturada : float = 0,
-    gordura_trans : float = 0,
-    fibra_alimentar : float = 0,
-    sodio : float = 0    
+    medida_caseira : int,
+    quantidade_porcao : float,
+    quantidade_embalagem : int,
+    quantidade_medida_caseira : float,
+    **rotulo    
     ) -> tuple[bool, str, Type[Nutricional] | None] :
 
     try:
         medida_caseira : Type[MedidaCaseira] = MedidaCaseira.objects.get(id=medida_caseira)
-
-        nutricional : Type[Nutricional] = Nutricional(
-                item = item,
-                quantidade_porcao = quantidade_porcao,
-                quantidade_embalagem = quantidade_embalagem,
-                quantidade_medida_caseira = quantidade_medida_caseira,
-                medida_caseira = medida_caseira,
-                valor_energetico = valor_energetico,
-                carboidrato = carboidrato,
-                acucar_total = acucar_total,
-                acucar_adicionado = acucar_adicionado,
-                proteina = proteina,
-                gordura_total = gordura_total,
-                gordura_saturada = gordura_saturada,
-                gordura_trans = gordura_trans,
-                fibra_alimentar = fibra_alimentar,
-                sodio = sodio
-            )
-
-        tmp_acucar_adicionado : float = (acucar_adicionado / quantidade_porcao) * .1
-        if tmp_acucar_adicionado >= 15:
-            nutricional.alto_acucar = True
-
-        tmp_gordura_saturada  : float = (gordura_saturada / quantidade_porcao) * .1
-        if tmp_gordura_saturada >= 6:
-            nutricional.alto_gordura = True
-
-        tmp_sodio : float = (sodio / quantidade_porcao) * .1
-        if tmp_sodio >= 600:
-            nutricional.alto_sodio = True
-        nutricional.save()
-
-        return (True, 'Nutricional criado com sucesso!', nutricional)
     except Exception as e:
         return (False, f'Não foi possível criar o Nutricional. [{str(e)}]', None)
 
+    with transaction.atomic():
+        try:
+            nutricional = Nutricional.objects.filter(item=item)
+
+            if nutricional.exists():
+                nutricional = nutricional.first()
+                nutricional.medida_caseira = medida_caseira
+            else:
+                nutricional = Nutricional(
+                    item=item,
+                    medida_caseira=medida_caseira
+                )
+
+            nutricional.quantidade_porcao = quantidade_porcao
+            nutricional.quantidade_embalagem = quantidade_embalagem
+            nutricional.quantidade_medida_caseira = quantidade_medida_caseira
+        
+            if item.composto:
+                ingredientes = ComposicaoItem.objects.filter(produto_final=item)
+
+                for i in ingredientes:
+                    _ingrediente : Type[Nutricional] = Nutricional.objects.get(item=i.ingrediente)
+                    nutricional.carboidrato += (_ingrediente.carboidrato / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.acucar_total += (_ingrediente.acucar_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.proteina += (_ingrediente.proteina / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.gordura_total += (_ingrediente.gordura_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.gordura_saturada += (_ingrediente.gordura_saturada / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.fibra_alimentar += (_ingrediente.fibra_alimentar / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    nutricional.sodio += (_ingrediente.sodio / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+
+                    if i.acucar_adicional:
+                        nutricional.acucar_adicionado += (_ingrediente.acucar_total / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+                    else:
+                        nutricional.acucar_adicionado += (_ingrediente.acucar_adicionado / _ingrediente.quantidade_porcao) * i.quantidade_ingrediente
+
+                rendimento = RendimentoItem.objects.get(item=item).quantidade_rendimento
+
+                nutricional.carboidrato = nutricional.carboidrato / rendimento * nutricional.quantidade_porcao
+                nutricional.acucar_total = nutricional.acucar_total / rendimento * nutricional.quantidade_porcao
+                nutricional.acucar_adicionado = nutricional.acucar_adicionado / rendimento * nutricional.quantidade_porcao
+                nutricional.proteina = nutricional.proteina / rendimento * nutricional.quantidade_porcao
+                nutricional.gordura_total = nutricional.gordura_total / rendimento * nutricional.quantidade_porcao
+                nutricional.gordura_saturada = nutricional.gordura_saturada / rendimento * nutricional.quantidade_porcao
+                nutricional.gordura_trans = nutricional.gordura_trans / rendimento * nutricional.quantidade_porcao
+                nutricional.fibra_alimentar = nutricional.fibra_alimentar / rendimento * nutricional.quantidade_porcao
+                nutricional.sodio = nutricional.sodio / rendimento * nutricional.quantidade_porcao
+                
+                nutricional.valor_energetico = (4 * (nutricional.carboidrato + nutricional.proteina)) + (9 * nutricional.gordura_total) + (2 * nutricional.fibra_alimentar)
+
+            else:
+                nutricional.quantidade_porcao = quantidade_porcao
+                nutricional.quantidade_embalagem = quantidade_embalagem
+                nutricional.quantidade_medida_caseira = quantidade_medida_caseira
+                nutricional.medida_caseira = medida_caseira
+                nutricional.valor_energetico = rotulo['valor_energetico'] if rotulo['valor_energetico'] else 0
+                nutricional.carboidrato = rotulo['carboidrato'] if rotulo['carboidrato'] else 0
+                nutricional.acucar_total = rotulo['acucar_total'] if rotulo['acucar_total'] else 0
+                nutricional.acucar_adicionado = rotulo['acucar_adicionado'] if rotulo['acucar_adicionado'] else 0
+                nutricional.proteina = rotulo['proteina'] if rotulo['proteina'] else 0
+                nutricional.gordura_total = rotulo['gordura_total'] if rotulo['gordura_total'] else 0
+                nutricional.gordura_saturada = rotulo['gordura_saturada'] if rotulo['gordura_saturada'] else 0
+                nutricional.gordura_trans = rotulo['gordura_trans'] if rotulo['gordura_trans'] else 0
+                nutricional.fibra_alimentar = rotulo['fibra_alimentar'] if rotulo['fibra_alimentar'] else 0
+                nutricional.sodio = rotulo['sodio'] if rotulo['sodio'] else 0
+
+            tmp_acucar_adicionado : float = (nutricional.acucar_adicionado / quantidade_porcao) * .1
+            if tmp_acucar_adicionado >= 15:
+                nutricional.alto_acucar = True
+
+            tmp_gordura_saturada  : float = (nutricional.gordura_saturada / quantidade_porcao) * .1
+            if tmp_gordura_saturada >= 6:
+                nutricional.alto_gordura = True
+
+            tmp_sodio : float = (nutricional.sodio / quantidade_porcao) * .1
+            if tmp_sodio >= 600:
+                nutricional.alto_sodio = True
+            nutricional.save()
+
+            return (True, 'Nutricional criado com sucesso!', nutricional)
+        except Exception as e:
+            return (False, f'Não foi possível criar o Nutricional. [{str(e)}]', None)
 
 def criar_medida_caseira(descricao : str) -> tuple[bool, str, Type[MedidaCaseira] | None] :
     descricao = clean_text(descricao)
@@ -257,4 +252,4 @@ def criar_ingrediente(
         item_composicao.save()
         return (True, 'Item da Composição criado com sucesso!', item_composicao)
     except Exception as e:
-        return (False, f'Não foi possível criar o Item da Composição. [{str(e)}]', None)    
+        return (False, f'Não foi possível criar o Item da Composição. [{str(e)}]', None)

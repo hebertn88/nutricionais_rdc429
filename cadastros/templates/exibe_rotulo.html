@@ -7,206 +7,195 @@ Rótulo
 {% endblock %}
 
 {% block body %}
-    teste: {{ item.descricao }}
-    <table class="table table-striped table-hover rounded shadow">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3"></th>
-                <th scope="col" class="p-3">100g</th>
-                <th scope="col" class="p-3">{{ rotulo.quantidade_porcao | multMil:1000 }}g</th>
-                <th scope="col" class="p-3">%VD*</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    Valor Energético
-                </td>
-                <td>
-                    {{ rotulo.valor_energetico | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.valor_energetico | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Carboidrato
-                </td>
-                <td>
-                    {{ rotulo.carboidrato | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.carboidrato | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Açúcar Total
-                </td>
-                <td>
-                    {{ rotulo.acucar_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.acucar_total | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Açúcar Adicionado
-                </td>
-                <td>
-                    {{ rotulo.acucar_adicionado | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.acucar_adicionado | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Proteina
-                </td>
-                <td>
-                    {{ rotulo.proteina | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.proteina | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Gordura Total
-                </td>
-                <td>
-                    {{ rotulo.gordura_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.gordura_total | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Gordura Saturada
-                </td>
-                <td>
-                    {{ rotulo.gordura_saturada | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.gordura_saturada | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Gordura Trans
-                </td>
-                <td>
-                    {{ rotulo.gordura_trans | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.gordura_trans | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Fibra Alimentar
-                </td>
-                <td>
-                    {{ rotulo.fibra_alimentar | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
-                </td>
-                <td>
-                    {{ rotulo.fibra_alimentar | arredRotulo }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Sódio
-                </td>
-                <td>
-                    {{ rotulo.sodio | qtdPerCent:rotulo.quantidade_porcao | arredRotulo:'mg' }}
-                </td>
-                <td>
-                    {{ rotulo.sodio | arredRotulo:'mg' }}
-                </td>
-                <td>
-                    __valor_diario__
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    
-            <table class="table table-striped table-hover rounded shadow">
-                <thead>
-                  <tr>
-                    <th scope="col" class="p-3">Ingrediente</th>
-                    <th scope="col" class="p-3">Quantidade Utilizada</th>
-                    <th scope="col" class="p-3">Remover</th>
-                  </tr>
-                </thead>
-                <tbody id="tBody">
-                    <tr id="rowVazio">
-                        <td class="text-center" colspan="3">Não há ingredientes para exibir!</td>
-                    </tr>
-                    <!--<tr>
-                        <td class="p-3">MISTURA PAO FRANCES</td>
-                        <td class="p-3">0,5</td>
-                        <td class="p-3">
-                            <button class="btn btn-danger btn-sm">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-3">
-                            MELHORADOR
-                            <span class="badge rounded-pill text-bg-primary">Açúcar</span>
-                        </td>
-                        <td class="p-3">0,8</td>
-                        <td class="p-3">
-                            <button class="btn btn-danger btn-sm">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-                        </td>
-                    </tr>-->
-                </tbody>
-            </table>
-        </section>
-
-        <hr class="mb-4" id="sepFinalSection">
-
-        <div class="d-flex flex-row flex-wrap align-items-end mb-3 gap-3">
-            <button type="submit" class="btn btn-primary ms-auto" id="enviar" name="enviar">
-                <i class="bi bi-save-fill"></i>
-                Enviar
-            </button>
+    <div class="bg-white p-3 mt-3 rounded shadow position-relative">
+        <div class="d-flex align-items-center">
+            <div class="d-flex flex-fill justify-content-center">
+                <h1 class="text-center"> {{ item.descricao }} </h1>
+            </div>
+            <div class="position-absolute end-0 pe-3">
+                <a class="btn btn-primary" href="{% url 'cadastro_item' %}" role="button">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    Criar novo Item
+                </a>
+            </div>
         </div>
-        
-    </form>
+        <hr></hr>
+        <h2 class="text-center">Informação Nutricional</h2>
+        <p>Porções por embalagem: {{rotulo.quantidade_embalagem}} {% if rotulo.quantidade_embalagem <= 1 %} porção {% else %} porções {% endif %}</p>
+        <p>Porção: {{ rotulo.quantidade_porcao | multMil:1000 }}g ({{ rotulo.quantidade_medida_caseira | multMil:1 }} {{ rotulo.medida_caseira.descricao | title }})</p>
+        <table class="table table-striped table-hover rounded shadow">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3"></th>
+                    <th scope="col" class="p-3 text-center">100g</th>
+                    <th scope="col" class="p-3 text-center">{{ rotulo.quantidade_porcao | multMil:1000 }}g</th>
+                    <th scope="col" class="p-3 text-center">%VD*</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        Valor Energético (kcal)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.valor_energetico | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.valor_energetico | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.valor_energetico | vdr:'valor_energetico' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Carboidrato (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.carboidrato | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.carboidrato | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.carboidrato | vdr:'carboidrato' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Açúcar Total (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.acucar_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.acucar_total | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        -
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ms-4">Açúcar Adicionado (g)</div>
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.acucar_adicionado | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.acucar_adicionado | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.acucar_adicionado | vdr:'acucar_adicionado' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Proteina (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.proteina | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.proteina | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.proteina | vdr:'proteina' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Gordura Total (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_total | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_total | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_total | vdr:'gordura_total' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Gordura Saturada (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_saturada | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_saturada | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_saturada | vdr:'gordura_saturada' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Gordura Trans (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_trans | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_trans | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.gordura_trans | vdr:'gordura_trans' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fibra Alimentar (g)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.fibra_alimentar | qtdPerCent:rotulo.quantidade_porcao | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.fibra_alimentar | arredRotulo }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.fibra_alimentar | vdr:'fibra_alimentar' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Sódio (mg)
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.sodio | qtdPerCent:rotulo.quantidade_porcao | arredRotulo:'mg' }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.sodio | arredRotulo:'mg' }}
+                    </td>
+                    <td class="text-center">
+                        {{ rotulo.sodio | vdr:'sodio' }}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-center p-3">
+                        *Percentual de valores diários fornecidos pela porção.
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        {% if rotulo.alto_acucar or rotulo.alto_gordura or rotulo.alto_sodio %}
+        <div class="d-flex gap-3">
+            <button class="btn btn-lg btn-outline-dark"><i class="bi bi-search pe-2"></i>ALTO EM</button>
+            {% if rotulo.alto_acucar %}
+            <button class="btn btn-lg btn-dark">ACÚCAR ADICIONADO</button>
+            {% endif %}
+            {% if rotulo.alto_gordura %}
+            <button class="btn btn-lg btn-dark">GORDURA SATURADA</button>
+            {% endif %}
+            {% if rotulo.alto_sodio %}
+            <button class="btn btn-lg btn-dark">SÓDIO</button>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>    
     
 {% endblock %}
