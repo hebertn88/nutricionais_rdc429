@@ -14,7 +14,7 @@ def criar_item(
     ingrediente : bool = False,
     composto: bool = False,
     quantidade_embalagem : int = 1,
-    quantidade_medida_caseira : float = 0.0,
+    quantidade_medida_caseira : float = 1,
     valor_energetico : float = 0.0,
     carboidrato : float = 0.0,
     acucar_total : float = 0.0,
@@ -38,8 +38,8 @@ def criar_item(
         return (False, f'Item já existe: [{item.id} - {item}]', None) 
 
     with transaction.atomic():
-        if composto:
-            try:
+        try:
+            if composto:
                 item : Type[Item] = Item(
                     descricao=descricao,
                     ingrediente=ingrediente,
@@ -71,15 +71,7 @@ def criar_item(
                     medida_caseira = medida_caseira
                 )
 
-                if nutricional[0]:
-                    return (True, 'Item criado com sucesso!', item)
-                else:
-                    return (False, nutricional[1], None)
-
-            except Exception as e:
-                return (False, f'Não foi possível criar o item. [{str(e)}]', None)
-        else:
-            try:
+            else:
                 item : Type[Item] = Item(descricao=descricao, ingrediente=ingrediente)
                 item.save()
                 nutricional : tuple[bool, str, Type[Nutricional]] = criar_nutricional(
@@ -99,12 +91,15 @@ def criar_item(
                     fibra_alimentar = fibra_alimentar,
                     sodio = sodio
                 )
-                if nutricional[0]:
-                    return (True, 'Item criado com sucesso!', item)
-                else:
-                    return (False, nutricional[1], None)
-            except Exception as e:
-                return (False, f'Não foi possível criar o item. [{str(e)}]', None)
+
+            if nutricional[0]:
+                return (True, 'Item criado com sucesso!', item)
+            else:
+                return (False, nutricional[1], None)
+                
+        except Exception as e:
+            return (False, f'Não foi possível criar o item. [{str(e)}]', None)
+
 
 def criar_nutricional(
     item : Type[Item],
@@ -202,6 +197,7 @@ def criar_nutricional(
         except Exception as e:
             return (False, f'Não foi possível criar o Nutricional. [{str(e)}]', None)
 
+
 def criar_medida_caseira(descricao : str) -> tuple[bool, str, Type[MedidaCaseira] | None] :
     descricao = clean_text(descricao)
 
@@ -217,6 +213,7 @@ def criar_medida_caseira(descricao : str) -> tuple[bool, str, Type[MedidaCaseira
     except Exception as e:
         return (False, f'Não foi possível criar a Medida Caseira. [{str(e)}]', None)
 
+
 def criar_rendimento(
     item: Type[Item],
     quantidade: float) -> tuple[bool, str, Type[RendimentoItem] | None] :
@@ -228,7 +225,8 @@ def criar_rendimento(
         return (True, 'Rendimento criado com sucesso!', rendimento)
     except Exception as e:
         return (False, f'Não foi possível criar o Rendimento. [{str(e)}]', None)
-        
+
+
 def criar_ingrediente(
     produto_final : Type[Item],
     ingrediente : str,
@@ -253,3 +251,121 @@ def criar_ingrediente(
         return (True, 'Item da Composição criado com sucesso!', item_composicao)
     except Exception as e:
         return (False, f'Não foi possível criar o Item da Composição. [{str(e)}]', None)
+
+
+def editar_item(
+    item : Type[Item],
+    medida_caseira : int, #nutricional
+    quantidade_porcao : float,
+
+    ingrediente : bool = False,
+    quantidade_embalagem : int = 1,
+    quantidade_medida_caseira : float = 1,
+    valor_energetico : float = 0.0,
+    carboidrato : float = 0.0,
+    acucar_total : float = 0.0,
+    acucar_adicionado : float = 0.0,
+    proteina : float = 0.0,
+    gordura_total : float = 0.0,
+    gordura_saturada : float = 0.0,
+    gordura_trans : float = 0.0,
+    fibra_alimentar : float = 0.0,
+    sodio : float = 0.0,
+
+    quantidade_rendimento : float = 0.0,
+    ingredientes : list[dict[str, Any]] = []
+    ) -> tuple[bool, str, Type[Item] | None] :
+
+    compoe_algum_item = ComposicaoItem.objects.filter(ingrediente=item).exists()
+    if (not ingrediente) and compoe_algum_item:
+        return (False, f'Não foi possível atualizar o item. Ele faz parte da composição de pelo menos um item.', None)
+
+    with transaction.atomic():
+        try:
+            item.ingrediente = ingrediente
+            item.save()
+
+            if item.composto:
+
+                if quantidade_rendimento > 0:
+                    RendimentoItem.objects.filter(item=item).update(quantidade_rendimento=quantidade_rendimento)
+
+                if len(ingredientes) > 0:
+                    ComposicaoItem.objects.filter(produto_final=item).delete()
+
+                    for ingrediente in ingredientes:
+                        ing_result : tuple[bool, str, Type[ComposicaoItem] | None] = criar_ingrediente(
+                            produto_final = item,
+                            ingrediente = ingrediente['ingrediente'],
+                            quantidade_ingrediente = ingrediente['quantidade_ingrediente'],
+                            acucar_adicional = ingrediente['acucar_adicional']
+                        )
+
+                        if not ing_result[0]:
+                            return (False, ing_result[1], None)
+                
+                nutricional : tuple[bool, str, Type[Nutricional]] = criar_nutricional(
+                    item = item,
+                    quantidade_porcao = quantidade_porcao,
+                    quantidade_embalagem = quantidade_embalagem,
+                    quantidade_medida_caseira = quantidade_medida_caseira,
+                    medida_caseira = medida_caseira
+                )
+
+            else:
+                nutricional : tuple[bool, str, Type[Nutricional]] = criar_nutricional(
+                        item = item,
+                        quantidade_porcao = quantidade_porcao,
+                        quantidade_embalagem = quantidade_embalagem,
+                        quantidade_medida_caseira = quantidade_medida_caseira,
+                        medida_caseira = medida_caseira,
+                        valor_energetico = valor_energetico,
+                        carboidrato = carboidrato,
+                        acucar_total = acucar_total,
+                        acucar_adicionado = acucar_adicionado,
+                        proteina = proteina,
+                        gordura_total = gordura_total,
+                        gordura_saturada = gordura_saturada,
+                        gordura_trans = gordura_trans,
+                        fibra_alimentar = fibra_alimentar,
+                        sodio = sodio
+                    )
+            
+            if item.ingrediente:
+                composicao_itens = ComposicaoItem.objects.filter(ingrediente=item)
+
+                if composicao_itens.exists():
+                    for composicao in composicao_itens:
+                        _item = composicao.produto_final
+                        _mc = _item.nutricional.medida_caseira.id
+
+                        _ingredientes = []
+                        _tmp_ingr = ComposicaoItem.objects.filter(produto_final = _item)
+                        for i in _tmp_ingr:
+                            _ingredientes.append({
+                                'ingrediente' : i.ingrediente,
+                                'quantidade_ingrediente' : i.quantidade_ingrediente,
+                                'acucar_adicional' : i.acucar_adicional
+                            })
+                        editar_item(
+                            item = _item,
+                            medida_caseira = _mc, #nutricional
+                            quantidade_porcao = _item.nutricional.quantidade_porcao,
+                            ingrediente = _item.ingrediente,
+                            quantidade_embalagem = _item.nutricional.quantidade_embalagem,
+                            quantidade_medida_caseira = _item.nutricional.quantidade_medida_caseira,
+                            quantidade_rendimento = _item.rendimentoitem.quantidade_rendimento,
+                            ingredientes = _ingredientes
+                            )
+            
+
+            if nutricional[0]:
+                return (True, 'Item atualizado com sucesso!', item)
+            else:
+                return (False, nutricional[1], None)
+
+        except Exception as e:
+            return (False, f'Não foi possível atualizar o item. [{str(e)}]', None)
+
+
+
